@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style>
+      html {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 10px;
+      }
+
+      @page {
+        size: A4;
+        margin: 10px;
+        padding-top: 32px;
+
+        @top-center {
+          content: element(title);
+        }
+
+        @bottom-right {
+          content: element(footer);
+        }
+      }
+
+      .footer {
+        position: running(footer);
+      }
+
+      .pagenumber:before {
+        content: counter(page);
+      }
+
+      .pagecount:before {
+        content: counter(pages);
+      }
+
+      .header-table {
+        width: 100%;
+      }
+
+      .header-table th {
+        width: 33.33%;
+      }
+
+      .logo {
+        margin-top: 16px;
+      }
+
+      .logo img {
+        width: 100px;
+      }
+
+      .time {
+        color: #989898;
+        font-weight: normal;
+      }
+
+      .page-title {
+        color: #888888;
+        display: block;
+        margin-top: 10px;
+        position: running(title);
+        width: 100%;
+      }
+
+      .contractList {
+        width: 90%;
+        margin: 0 auto;
+        page-break-inside: avoid;
+        padding-bottom: 2em;
+      }
+
+      .table-text {
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .table-title {
+        font-size: 1.75em;
+        font-weight: 700;
+        margin-top: 8px;
+      }
+
+      .contractList table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1em;
+      }
+
+      .contractList td {
+        padding: 5px 5px 15px 5px;
+      }
+
+      .contractList tr {
+        border-bottom: 2px solid #000;
+      }
+
+      .contractList tr:last-child {
+        border-bottom: 3px solid #000;
+      }
+
+      .contractList tr:nth-child(odd) {
+        background-color: #ffffff;
+      }
+
+      .contractList th {
+        width: 85px;
+        height: 50px;
+        font-size: 12px;
+        border: 1px solid transparent;
+        border-right: 1px solid #fff;
+        text-align: center;
+        background-color: #a9a9a9;
+        color: #ffffff;
+      }
+
+      .contractList td:nth-child(1) {
+        text-align: center;
+      }
+
+      .total-qty {
+        margin-left: 25%;
+      }
+
+      .contractList .total-row {
+        font-weight: bold;
+      }
+
+      .contractList .total-row td {
+        border: none;
+        background-color: #fff;
+      }
+
+      .pagination {
+        font-weight: 400;
+        font-size: 15px;
+      }
+    </style>
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+      integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js"
+      integrity="sha512-zT3zHcFYbQwjHdKjCu6OMmETx8fJA9S7E6W7kBeFxultf75OPTYUJigEKX58qgyQMi1m1EgenfjMXlRZG8BXaw=="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      Handlebars.registerHelper('nowDate', function() {
+        return moment
+          .utc()
+          .local()
+          .format('D/M/YYYY H:mm:ss A');
+      });
+    </script>
+
+    <script src="main.js"></script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script id="template" type="text/x-handlebars-template">
+
+      <table class="header-table">
+          <tr>
+            <th class="logo"> <img src = "./logo.png"/> </th>
+            <th>
+              <h2 class="page-title">Contract Report</h2>
+              <h3 class="time">{{nowDate}}</h3>
+            </th>
+            <th class="pagination">
+              <div class="footer">Page <span class="pagenumber"></span> of <span class="pagecount"></span>
+              </div>
+            </th>
+          </tr>
+      </table>
+
+            <div class="conractListWrapper">
+                      {{#each accounts}}
+                <div class="contractList">
+                    <div class="table-title">{{accountName}} - {{accountNumber}}</div>
+                        {{#each commodities}}
+                        {{#each cropYears}}
+                        <div class="table-title">{{cropYear}} - {{../commodityName}} - Cargill, Inc</div>
+                        <table>
+                          <tr >
+                              <th>Shipment Period</th>
+                              <th>Futures Month</th>
+                              <th>Contract Price Type</th>
+                              <th colspan="2">Product</th>
+                              <th>Quantity To be Delivered/Original</th>
+                              <th>Futures/Basis</th>
+                              <th>Adjust</th>
+                              <th>Current Adj Price</th>
+                              <th>Current Market Value</th>
+                              <th>Delivery Point</th>
+                              <th>Contract Number</th>
+                              <th>Trade Date</th>
+                              <th>Defer Pay Date</th>
+                          </tr>
+
+                          {{#each prodcontracts}}
+                          <tr class="table-text">
+                              <td>{{shipmentPeriod}}</td>
+                              <td>{{futuresMonth}}</td>
+                              <td>{{contractPriceType}}</td>
+                              <td colspan="2">{{product}}</td>
+                              <td>{{quantityToBeDelivered}}/{{originalQuantity}}</td>
+                              <td>{{futures}}/{{basis}}</td>
+                              <td>{{adjust}}</td>
+                              <td>{{currentAdjPrice}}</td>
+                              <td>{{currentValue}}</td>
+                              <td>{{deliveryPoint}}</td>
+                              <td>{{contractNumber}}</td>
+                              <td>{{date}}</td>
+                              <td>{{deferPayDate}}</td>
+                          </tr>
+                          {{/each}}
+                          {{#each merchContracts}}
+                          <tr class="table-text">
+                              <td>{{shipmentPeriod}}</td>
+                              <td>{{futuresMonth}}</td>
+                              <td>{{contractPriceType}}</td>
+                              <td colspan="2">{{product}}</td>
+                              <td>{{quantityToBeDelivered}}/{{originalQuantity}}</td>
+                              <td>{{futures}}/{{basis}}</td>
+                              <td>{{adjust}}</td>
+                              <td>{{currentAdjPrice}}</td>
+                              <td>{{currentValue}}</td>
+                              <td>{{deliveryPoint}}</td>
+                              <td>{{contractNumber}}</td>
+                              <td>{{date}}</td>
+                              <td>{{deferPayDate}}</td>
+                          </tr>
+                          {{/each}}
+                          {{#each gpoContracts}}
+                          <tr class="table-text">
+                              <td>{{shipmentPeriod}}</td>
+                              <td>{{futuresMonth}}</td>
+                              <td>{{contractPriceType}}</td>
+                              <td colspan="2">{{product}}</td>
+                              <td>{{quantityToBeDelivered}}/{{originalQuantity}}</td>
+                              <td>{{futures}}/{{basis}}</td>
+                              <td>{{adjust}}</td>
+                              <td>{{currentAdjPrice}}</td>
+                              <td>{{currentValue}}</td>
+                              <td>{{deliveryPoint}}</td>
+                              <td>{{contractNumber}}</td>
+                              <td>{{date}}</td>
+                              <td>{{deferPayDate}}</td>
+                          </tr>
+                          {{/each}}
+
+
+
+                          <!-- <tr class="total-row">
+                              <td class="total">Total Quantity To Be Delivered:</td>
+                              <td>{{totalQuantityToBeDelivered}}</td>
+                              <td></td>
+                          </tr> -->
+                        </table>
+                           <div class="total-qty">
+
+                             <p class="table-text">Total Quantity To Be Delivered: {{totalQuantityToBeDelivered}}</p>
+                           </div>
+                    {{/each}}
+                        {{/each}}
+                </div>
+                {{/each}}
+            </div>
+    </script>
+  </body>
+</html>
